@@ -5,10 +5,15 @@ const regRules = <%- JSON.stringify(regRules, null, 2) %>
 
 function FindProxyForURL(url, host) {
 
-    if (shExpMatchRules(host, hostRules)
-      || shExpMatchRules(url, urlRules)
-      || matchRegRules(url, regRules)
-      || matchRegRules(host, regRules)) {
+    // if (shExpMatchRules(host, hostRules)
+    //   || shExpMatchRules(url, urlRules)
+    //   || matchRegRules(url, regRules)
+    //   || matchRegRules(host, regRules)) {
+    //   // return [proxy, 'DIRECT'].join(';')
+    //   return proxy
+    // }
+
+    if (shExpMatchRules(host, hostRules)) {
       return [proxy, 'DIRECT'].join(';')
     }
 

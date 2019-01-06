@@ -3,6 +3,12 @@ import * as fs from 'fs'
 import axios from 'axios'
 import * as ejs from 'ejs'
 
+const tiny = process.argv[2]
+
+const url = tiny === 'tiny'
+  ? 'https://raw.githubusercontent.com/gfwlist/tinylist/master/tinylist.txt'
+  : 'https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt'
+
 function renderFile (filepath, options): string {
 
   let res
@@ -25,7 +31,7 @@ export async function gfw2pac (): Promise<void> {
   const urlRules: string[] = []
   const regRules: string[] = []
 
-  const { data } = await axios.get('https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt')
+  const { data } = await axios.get(url)
   const lines: string[] = Buffer.from(data, 'base64').toString('utf8').split('\n')
 
   for (let rule of lines) {

@@ -1,7 +1,11 @@
 const proxy = 'SOCKS5 127.0.0.1:7070'
+
 const hostRules = <%- JSON.stringify(hostRules, null, 2) %>
 const urlRules = <%- JSON.stringify(urlRules, null, 2) %>
 const regRules = <%- JSON.stringify(regRules, null, 2) %>
+const whiteHostRules = <%- JSON.stringify(whiteHostRules , null, 2) %>
+const whiteUrlRules = <%- JSON.stringify(whiteUrlRules , null, 2) %>
+const whiteRegRules = <%- JSON.stringify(whiteRegRules , null, 2) %>
 
 function FindProxyForURL(url, host) {
 
@@ -12,6 +16,12 @@ function FindProxyForURL(url, host) {
     //   // return [proxy, 'DIRECT'].join(';')
     //   return proxy
     // }
+
+    if (shExpMatchRules(host, whiteHostRules)
+      || shExpMatchRules(url, whiteUrlRules)) {
+
+      return 'DIRECT'
+    }
 
     if (shExpMatchRules(host, hostRules)) {
       return [proxy, 'DIRECT'].join(';')

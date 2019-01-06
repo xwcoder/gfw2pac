@@ -1,0 +1,36 @@
+{
+  "name": "gfw2pack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./lib",
+  "scripts": {
+    "prebuild": "rm -rf ./lib",
+    "build": "tsc",
+    "dev": "tsc -w",
+    "lint": "tslint --project tsconfig.json"
+  },
+  "pre-commit": [
+    "lint",
+    "test"
+  ],
+  "author": {
+    "name": "creep",
+    "email": "creep.wei@gmail.com"
+  },
+  "repository": {
+    "type": "",
+    "url": ""
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^10.12.18",
+    "tslint": "^5.11.0",
+    "tslint-config-ilemon": "^0.1.5",
+    "tslint-sonarts": "^1.8.0",
+    "typescript": "^3.2.2"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "ejs": "^2.6.1"
+  }
+}

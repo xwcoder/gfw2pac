@@ -5,3 +5,4 @@ log
 logs/
 *.log
 .DS_Store
+gfwlist.txt

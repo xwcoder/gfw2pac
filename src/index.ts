@@ -35,6 +35,10 @@ function parseRule (rule) {
 
     rule = rule.slice(2)
 
+    if (rule[rule.length - 1] === '/') {
+      rule = rule.slice(0, -1)
+    }
+
     if (rule[0] === '.') {
       hostR.push(`*${rule}`)
     } else {
@@ -59,6 +63,10 @@ function parseRule (rule) {
     if (rule.includes('/')) {
       urlR.push(rule)
     } else if (rule.includes('.')) {
+
+      if (rule[rule.length - 1] === '/') {
+        rule = rule.slice(0, -1)
+      }
 
       hostR.push(rule)
 
@@ -87,6 +95,7 @@ export async function gfw2pac (): Promise<void> {
   let whiteRegRules: string[] = []
 
   const { data } = await axios.get(url)
+  // const data = fs.readFileSync(path.resolve(__dirname, '../gfwlist.txt'), 'utf-8')
   const lines: string[] = Buffer.from(data, 'base64').toString('utf8').split('\n')
 
   for (const rule of lines) {
@@ -108,8 +117,38 @@ export async function gfw2pac (): Promise<void> {
     }
   }
 
+  const hostRulesMap: any = {}
+
+  for (const rule of hostRules) {
+
+    const suffix = rule.split('.').reverse()[0]
+    const groupList = hostRulesMap[suffix] || []
+    groupList.push(rule)
+
+    hostRulesMap[suffix] = groupList
+  }
+
+  const entries: any = Object.entries(hostRulesMap)
+  for (const [key, rules] of entries) {
+
+    if (rules.length > 1000) {
+
+      const letterMap = {}
+
+      for (const rule of rules) {
+        const letter = rule.split('.').reverse()[1][0]
+        const list = letterMap[letter] || []
+        list.push(rule)
+        letterMap[letter] = list
+      }
+
+      hostRulesMap[key] = letterMap
+    }
+  }
+
   const pac = renderFile(path.resolve(__dirname, '../proxy.pac.ejs'), {
-    hostRules,
+    // hostRules,
+    hostRulesMap,
     urlRules,
     regRules,
     whiteHostRules,
